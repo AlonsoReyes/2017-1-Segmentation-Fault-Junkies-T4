@@ -1,41 +1,35 @@
 from django.conf.urls import url
-from main import views
+
+from . import views
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.login,name='login'),
-    url(r'^signup/$', views.signup,name='signup'),
-    url(r'^loginReq/',views.loginReq, name = 'loginReq'),
-    url(r'^gestionproductos/$', views.gestionproductos,name='gestionproductos'),
-    url(r'^vendedorprofilepage/$', views.vendedorprofilepage,name='vendedorprofilepage'),
-    url(r'^formView/', views.formView, name='formView'),
-    url(r'^logout/', views.logout, name='logout'),
-    url(r'^register/', views.register, name='register'),
-    url(r'^loggedin/', views.loggedin, name='loggedin'),
-    url(r'^productoReq/', views.productoReq, name='productoReq'),
-    url(r'^vistaVendedorPorAlumno/', views.vistaVendedorPorAlumno, name='vistaVendedorPorAlumno'),
-    url(r'^cambiarEstado/$', views.cambiarEstado,name='cambiarEstado'),
-    url(r'^editarVendedor/$', views.editarVendedor,name='editarVendedor'),
-    url(r'^editarDatos/$', views.editarDatos,name='editarDatos'),
-    url(r'^inicioAlumno/', views.inicioAlumno, name='inicioAlumno'),
-    url(r'^borrarUsuario/', views.borrarUsuario, name='borrarUsuario'),
-    url(r'^borrarProducto/', views.borrarProducto, name='borrarProducto'),
-    url(r'^editarProducto/', views.editarProducto, name='editarProducto'),
-    url(r'^cambiarFavorito/', views.cambiarFavorito, name='cambiarFavorito'),
-    url(r'^vistaVendedorPorAlumnoSinLogin/', views.vistaVendedorPorAlumnoSinLogin, name='vistaVendedorPorAlumnoSinLogin'),
-    url(r'^editarPerfilAlumno/', views.editarPerfilAlumno,name='editarPerfilAlumno'),
-    url(r'^procesarPerfilAlumno/', views.procesarPerfilAlumno,name='procesarPerfilAlumno'),
-    url(r'^editarUsuario/', views.editarUsuario, name='editarUsuario'),
-    url(r'^agregarAvatar/', views.agregarAvatar, name='agregarAvatar'),
-    url(r'^signupAdmin/$', views.signupAdmin,name='signupAdmin'),
-    url(r'^registerAdmin/$', views.registerAdmin,name='registerAdmin'),
-    url(r'^getStock/$', views.getStock,name='getStock'),
-    url(r'^verificarEmail/$', views.verificarEmail,name='verificarEmail'),
-    url(r'^adminEdit/$', views.adminEdit,name='adminEdit'),
-    url(r'^editarUsuarioAdmin/$', views.editarUsuarioAdmin,name='editarUsuarioAdmin'),
-    url(r'^loginAdmin/$', views.loginAdmin, name='loginAdmin'),
-    url(r'^createTransaction/$', views.createTransaction, name='createTransaction'),
-    url(r'^fijoDashboard/$', views.fijoDashboard, name='fijoDashboard'),
-    url(r'^ambulanteDashboard/$', views.ambulanteDashboard, name='ambulanteDashboard'),
-
-
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^signup/$', views.signup, name='signup'),
+    url(r'^auth/$', views.auth_view, name='autenticacion'),
+    url(r'^registration/$', views.registration, name='registration'),
+    url(r'^edit/$', views.edit, name='edit'),
+    url(r'^edit_auth/$', views.edit_auth, name='edit_auth'),
+    url(r'^activeChange/$', views.ajaxActive, name = 'ajaxActive'),
+    url(r'^gestion_productos/$', views.gestion_productos, name = 'gestion_productos'),
+    url(r'^addItem_auth/$', views.addItem_auth, name='addItem_auth'),
+    url(r'^edit_prod/(?P<producto_id>\d+)/$', views.edit_prod, name='edit_prod'),
+    url(r'^edit_prod_auth/$', views.edit_prod_auth, name='edit_prod_auth'),
+    url(r'^elim_prod/$', views.elim_prod, name='elim_prod'),
+    url(r'^downStockTransaction/$', views.ajaxDownTransaction, name='ajaxDownTransaction'),
+    url(r'^upStock/$', views.ajaxUpStock, name='ajaxUpStock'),
+    url(r'^favChange/$', views.ajaxFavChange, name='ajaxFavChange'),
+    url(r'^(?P<vendedor_id>\d+)/$', views.vendedor_perfil, name='vendedor_perfil'),
+    url(r'^estadisticas/$', views.estadisticas, name='estadisticas'),
+    url(r'^editGraf/$', views.ajaxEditGraf, name='ajaxEditGraf'),
 ]
+
+""""
+    
+    
+    
+    
+    
+    
+    """

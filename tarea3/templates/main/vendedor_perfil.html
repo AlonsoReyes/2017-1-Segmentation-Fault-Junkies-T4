@@ -1,0 +1,259 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+<script>
+ $(document).ready(function(){
+    $('.modal').modal();
+  });
+
+</script>
+    <script>
+        function bajarStock(id) {
+            $.ajax({
+                    url: '/main/downStockTransaction/',
+                    data: {
+                        'producto_id': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#stockPrv").html("Stock: "+ data.stock);
+                        $("#stockMod").html("Stock: "+ data.stock);
+                    },
+                });
+        }
+
+        function subirStock(id) {
+            $.ajax({
+                    url: '/main/upStock/',
+                    data: {
+                        'producto_id': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#stockPrv").html("Stock: "+ data.stock);
+                        $("#stockMod").html("Stock: "+ data.stock);
+                    },
+                });
+        }
+
+        function fav(vid, cid) {
+            var checkbox = document.getElementById('favLever');
+            $.ajax({
+                    url: '/main/favChange/',
+                    data: {
+                        'fav': checkbox.checked,
+                        'c_id': cid,
+                        'v_id': vid,
+                    },
+                    dataType: 'json',
+                });
+        }
+
+
+    </script>
+    <main>
+
+    <div class="container">
+        <div id="profile-page-header" class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+                <img class="activator" src="/static/img/food-background3.png" alt="user background">
+            </div>
+            <div class="row hide-on-small-and-down">
+                <a class="card-profile-image-large">
+                    <img style="margin-top: 20%;" src="/static/media/{{vendedor.avatar}}" alt="profile image" class="circle z-depth-2 responsive-img activator">
+                </a>
+            </div>
+            <div class="row show-on-small hide-on-med-and-up">
+                <a class="card-profile-image-small">
+                    <img src="/static/media/{{vendedor.avatar}}" alt="profile image" class="circle z-depth-2 responsive-img activator">
+                </a>
+            </div>
+            <div class="card-content s12">
+                <div class="row">
+                    <div class="col s3 offset-s2 hide-on-med-and-down">
+                        <h4 class="center-align card-title grey-text flow-text text-darken-4">{{vendedor.get_full_name}}</h4>
+                        <p class=" center-align medium-small flow-text grey-text">Vendedor {% if vendedor.is_movil %}Movil{% else %}Fijo{% endif %}</p>
+                        {% if vendedor.is_fijo %}
+                            <p class="center-align flow-text text-darken-4" style="font-size: 0.88rem;">
+                                Horario: <a class="light-green-text">{{vendedor.horas}}</a>
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="col s3 l2 hide-on-med-and-down center-align" {% if userB.id == user.user.id %}id="estado"{% endif %}>
+                        <h4 class="card-title flow-text text-darken-4">Estado</h4>
+                        {% if activo %}
+                            <p class="medium-small flow-text light-green-text">Disponible</p>
+                        {% else %}
+                            <p class="medium-small flow-text red-text">No Disponible</p>
+                        {% endif %}
+                    </div>
+                    <div class="col s3 l2 hide-on-med-and-down center-align">
+                        <h4 class="card-title flow-text text-darken-4"></h4>
+                        <h8 class=" grey-text flow-text text-darken-4 " style="font-size: 1.3rem;">Formas de pago</h8>
+                        {% if vendedor.efectivo %}
+                        <p class="medium-small flow-text grey-text ">Efectivo</p>
+                        {% endif %}
+                        {% if vendedor.credito %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta de Crédito</p>
+                        {% endif %}
+                        {% if vendedor.debito %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta de Débito</p>
+                        {% endif %}
+                        {% if vendedor.junaeb %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta Junaeb</p>
+                        {% endif %}
+                    </div>
+                    <div class="col s3 l2 hide-on-med-and-down center-align">
+                        <div class="switch" style="margin-left: 10px;">
+                            <label>
+                                <h4 class="card-title grey-text flow-text text-darken-4">Favorito</h4>
+                                <!--<input type="checkbox"><span class="lever"></span>-->
+                                    <h6><p><i class="material-icons amber-text center-align">grade</i></p>
+                                    {% if user.is_consumidor %}
+                                        <input type="checkbox" name = "favLever" id = "favLever" onchange="fav({{ vendedor.id }}, {{ user.get_consumidor.id }})"
+                                                {% if favorito %} checked="checked" {% endif %}><span class="lever"></span>
+                                    {% endif %}
+
+                                {% if user.is_vendedor %}
+                                    <span class=" grey-text flow-text text-darken-4"style="font-size:24px; line-height:35px;">{{vendedor.numfavoritos}}</span>
+                                {% endif %}
+                                </h6>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row show-on-medium-and-down hide-on-med-and-up">
+                <div class="col s4 offset-s2">
+                        <h4 class="card-title grey-text flow-text text-darken-4 center-align">aa{{vendedor.get_full_name}}</h4>
+                        <p class="medium-small flow-text grey-text center-align">&ensp;Vendedor {% if vendedor.is_movil %}Movil{% else %}Fijo{% endif %}</p>
+                        {% if vendedor.is_fijo %}
+                            <p class="flow-text text-darken-4 center-align" style="font-size: 0.88rem;">
+                                <a class="light-green-text">{{vendedor.horas}}</a>
+                            </p>
+                        {% endif %}
+                        <div class="switch center-align" style="margin-left: 10px;">
+                            <label>
+
+                                <p class="card-title grey-text flow-text text-darken-4 center-align" style="font-size: 1.3rem;">Favorito</p>
+                                <!--<input type="checkbox"><span class="lever"></span>-->
+                                <h6><p><i class="material-icons amber-text center-align">grade</i></p>
+
+                                    <span class=" grey-text flow-text text-darken-4 center-align"style="font-size:22px; line-height:25px;">{{vendedor.favoritos}}</span>
+                                </h6>
+                            </label>
+                        </div>
+                    </div>
+                <div class="col s3 m2 l12 offset-s1" {% if userB.id == user.user.id %}id="estadochico"{% endif %}>
+                    <p class=" flow-text text-darken-4">Estado</p>
+                    {% if activo %}
+                            <p class="medium-small flow-text light-green-text">Disponible</p>
+                        {% else %}
+                            <p class="medium-small flow-text red-text">No Disponible</p>
+                        {% endif %}
+                </div>
+
+                <div class="col s3 m2 l12 offset-s1"> <!--offset-s2-->
+                    <p class=" grey-text flow-text text-darken-4" style="font-size: 1.3rem;">Formas de pago</p>
+                        {% if vendedor.efectivo %}
+                        <p class="medium-small flow-text grey-text ">Efectivo</p>
+                        {% endif %}
+                        {% if vendedor.credito %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta de Crédito</p>
+                        {% endif %}
+                        {% if vendedor.debito %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta de Débito</p>
+                        {% endif %}
+                        {% if vendedor.junaeb %}
+                        <p class="medium-small flow-text grey-text ">Tarjeta Junaeb</p>
+                        {% endif %}
+                </div>
+
+                <!--<div class="col s3 offset-s2 offset-l10">
+                    <div class="switch" style="margin-left: 10px;">
+                        <label>
+                            <p class="card-title grey-text flow-text text-darken-4" style="font-size: 1.3rem;">Favorito</p>
+                            <input type="checkbox"><span class="lever"></span>
+                        </label>
+                    </div>
+                </div>-->
+               <!-- <div class="col s4 offset-s8 right-align"> <!--offset-s4-->
+
+
+            </div>
+        </div>
+    </div>
+    <div id="profile-page-content" class="row">
+        <div id="profile-page-wall" class="col s12 m8">
+            <div class="col s12 z-depth-1">
+                <div class="tab-content col s12">
+                    <div class="container">
+                        <div class="section">
+                            <div class="row">
+                                {% for producto in productos %}
+                                    <div class="col s6 m6 l4">
+                                    <div class="container">
+                                        <div class="card z-depth-1">
+                                            <div class="teal lighten-2 card-image waves-effect waves-block waves-light">
+                                              <img class="activator responsive-img center-block"  style="max-width: 30%; margin-top:20px; margin-bottom:20px;" src="/static/img/{{producto.avatar}}">
+                                            </div>
+                                            <div class="card-content">
+                                              <span class="card-title activator grey-text text-darken-4">{{producto.nombre}}<i class="material-icons right">more_vert</i></span>
+                                            <p><a class="teal-text">Precio: ${{producto.precio}}</a></p>
+                                                <p><a class="teal-text" id="stockPrv">Stock: {{producto.stock}} </a>
+                                                    {% ifequal userB.id vendedor.user.id %}
+                                                       &nbsp; &nbsp;
+                                                        <button class=" btn btn-medium waves-effect button teal" id="Button--'+{{ producto.id }}+'" type="button" onclick ="bajarStock({{ producto.id }});"   >-</button>
+                                                        <button class="btn btn-medium waves-effect button teal" id="Button++'+{{ producto.id }}+'" type="button" onclick ="subirStock({{ producto.id }});"  >+</button></p></p>
+                                                    {% endifequal %}
+
+                                                <div id="modal{{ producto.id }}" class="modal">
+                                                    <div class="modal-content">
+                                                      <img class="activator responsive-img center-block" src="/static/media/{{producto.imagen}}">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat"><i class="large material-icons">close</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-reveal">
+                                              <span class="card-title grey-text text-darken-4">{{producto.nombre}}<i class="material-icons right">close</i></span>
+                                                <ul>
+                                                    <li>Precio: <a class="grey-text light-green-text">${{producto.precio}}</a></li>
+                                                    <li>Categoria: {{producto.categoria.categoria}}</li>
+                                                    <li><a class="grey-text light-green-text" id="stockMod">Stock: {{ producto.stock }}</a> </li>
+                                                    <!--<small class="btn-floating btn-small waves-effect waves-light red accent-2"><i class="material-icons tiny">add</i></small>-->
+                                                    <br>
+                                                        <li>Descripción: {{producto.descripcion}}
+                                                            {% if producto.foto != 'background4.png' %}
+                                                            <p class="right-align"><a class="waves-effect waves-light" href="#modal{{ producto.id }}">Ver imagen</a></p>
+                                                            {% endif %}
+                                                            {% if userB.id == vendedor.user.id %}
+                                                            <p class="right-align"><a class="waves-effect waves-light" href="edit_prod/{{producto.id}}">Editar</a></p>
+                                                            {% endif %}
+                                                        </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            {% if userB.id == vendedor.user.id %}
+                <div class='row'>
+                    <a class='col l5 offset-l4 btn btn-large waves-effect button teal' href="{% url 'gestion_productos' %}">Agregar Item</a>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    </main>
+{% endblock %}

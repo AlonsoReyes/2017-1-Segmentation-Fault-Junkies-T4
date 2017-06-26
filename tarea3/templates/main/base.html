@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Compiled and minified CSS -->
@@ -8,19 +9,64 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        #canvas-container {
+           width: 100%;
+           text-align:center;
+        }
+
+        canvas {
+           display: inline;
+        }
+
+    </style>
 
     <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="../static/fb.js"></script>
+    <script type="text/javascript" src="/static/fb.js"></script>
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <script src="http://materializecss.com/templates/starter-template/js/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+
+
+    <script>
+        function act() {
+            var checkbox = document.getElementById('active');
+            $.ajax({
+                    url: '/main/activeChange/',
+                    data: {
+                        'activo': checkbox.checked
+                    },
+                    dataType: 'json',
+                });
+            if ($('#estado').length > 0) {
+                if (checkbox.checked){
+                    $('#estado').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text light-green-text">Disponible</p>');
+                }
+                else{
+                    $('#estado').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text red-text">No Disponible</p>');
+                }
+            }
+            if ($('#estadochico').length > 0) {
+                if (checkbox.checked){
+                    $('#estadochico').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text light-green-text">Disponible</p>');
+                }
+                else{
+                    $('#estadochico').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text red-text">No Disponible</p>');
+                }
+            }
+        }
+
+    </script>
+
+
 
     <nav class="top-nav">
         <div class="nav-wrapper teal lighten-1">
-            <a href="#" class="brand-logo right"><img style="max-height: 65px!important;  padding: 8px 0!important;" class="circle" src="../static/img/logo.png"></a>
+            <a href="#" class="brand-logo right"><img style="max-height: 65px!important;  padding: 8px 0!important;" class="circle" src="/static/img/logo.png"></a>
           <div class="navbar-fixed">
             <a href="#" data-activates="slide-out"
                class="left button-collapse btn-floating btn-large waves-effect waves-light"><i
@@ -30,34 +76,59 @@
             <ul id="slide-out" class="side-nav fixed leftside-navigation ps-container ps-active-y">
                 <li>
                     <div class="userView">
-                    <i class="material-icons right grey-text text-lighten-2" style="position: absolute; bottom: -0.5em; right: 0.5em; padding: 0 0 !important;">settings</i>
+
+                        <a href="{% url 'edit' %}">
+                            <i class="material-icons right grey-text text-lighten-2" style="position: absolute; bottom: -0.5em; right: 0.5em; padding: 0 0 !important;">settings</i>
+                        </a>
+
                   <div class="background" style="height:175px;">
-                    <img src="../static/img/background4.png">
+                    <img src="/static/img/background4.png">
                   </div>
-                  <a href="#!user"><img style="margin-top: 16%;" class="circle" src="../static/img/AvatarPenguin.png"></a>
-                  <a href="#!name"><span style="margin-left: 5%;" class="white-text name">Invitado</span></a>
+                {% if user.is_authenticated %}
+                    <a href="#!user"><img style="margin-top: 16%;" class="circle" src="/static/media/{{user.get_avatar}}"></a>
+                    <a href="#!name"><span style="margin-left: 5%;" class="white-text name">{{user.get_full_name}}</span></a>
+
+                {% else %}
+                    <a href="#!user"><img style="margin-top: 16%;" class="circle" src="/static/img/AvatarPenguin.png"></a>
+                    <a href="#!name"><span style="margin-left: 5%;" class="white-text name">Invitado</span></a>
+                {% endif %}
+
                 </div>
                 </li>
                 <li><a href="{% url 'index' %}"><i class="material-icons">home</i>Inicio</a></li>
-                <li><a href="{% url 'login' %}"><i class="material-icons">account_circle</i>Iniciar Sesión</a></li>
-                <!--<li><a href=""><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>-->
-                <!--<li><div class="divider"></div></li>
-                <li><a class="subheader">Activo</a></li>
-                <li>
-                    <div class="switch" style="margin-left: 80px;">
-                        <label>
-                            No<input type="checkbox"><span class="lever"></span>Si
-                        </label>
-                    </div>
-                </li>
+                {% if user.is_authenticated %}
+                    {% if user.is_vendedor %}
+                        <li><a href="{% url 'estadisticas' %}"><i class="material-icons">assessment</i>Estadísticas</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}"><i class="material-icons">account_circle</i>Iniciar Sesión</a></li>
+                {% endif %}
+                <li><div class="divider"></div></li>
+
+                {% if user.is_movil %}
+                    <li><a class="subheader">Activo</a></li>
+                    <li>
+                        <div class="switch" style="margin-left: 80px;">
+                            <label>
+                                No<input type="checkbox" name = "active" id = "active" onchange="act()" {% if activo %} checked="checked" {% endif %}><span class="lever"></span>Si
+                            </label>
+                        </div>
+                    </li>
+                {% endif %}
+
+
+                {% if not user.is_vendedor %}
                 <li><a class="subheader">Filtros</a></li>
-                <li>
-                    <div class="switch" style="margin-left: 10px;">
-                        <label>
-                            <input type="checkbox"><span class="lever"></span>Sólo mostrar favoritos
-                        </label>
-                    </div>
-                </li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <div class="switch" style="margin-left: 10px;">
+                            <label>
+                                <input type="checkbox" ><span class="lever"></span>Sólo mostrar favoritos
+                            </label>
+                        </div>
+                    </li>
+                {% endif %}
                 <li>
                     <div class="switch" style="margin-left: 10px;">
                         <label>
@@ -68,10 +139,12 @@
                 <li>
                     <div class="switch" style="margin-left: 10px;">
                         <label>
-                            <input type="checkbox"><span class="lever"></span>Almuerzos
+                            <input type="checkbox"><span class="lever"></span>main
                         </label>
                     </div>
-                </li>-->
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>

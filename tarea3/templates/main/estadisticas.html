@@ -1,0 +1,176 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+<main>
+<div class="section">
+    <div class="section">
+        Fecha de Inicio:
+     <input type="date" name="date" id="iniDate" class="datepicker" onchange="editGraficos()"/>
+        Fecha de Fin:
+     <input type="date" name="date" id="finDate" class="datepicker" onchange="editGraficos()"/>
+    </div>
+    <div class="section">
+              <div class="row">
+                      <h2 style="text-align: center;">Ventas por Item</h2>
+              </div>
+    </div>
+    <div class="section">
+        <div class="row">
+            <div class="row"></div>
+            <div class="canvas-container" id="canvas-container" >
+                <div id="ventaItemContainer">
+                    <canvas id="chartVentasItem" width=600 height=400></canvas>
+                </div>
+            </div>
+        </div>
+
+
+
+            <div class="section">
+                  <div class="row">
+                          <h2 style="text-align: center;">Favoritos en el intervalo</h2>
+                  </div>
+        </div>
+
+        <div class="row">
+            <div class="row"></div>
+            <div class="canvas-container" id="canvas-container">
+                <div id="favoritosContainer">
+                    <canvas id="chartFavoritos" width=600 height=400></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15, // Creates a dropdown of 15 years to control year
+    format: 'yyyy/mm/dd',
+     });
+    var productos={{productosGraficar|safe }}
+    var valores ={{ cantidadGraficar|safe }}
+    var ctx = document.getElementById('chartVentasItem').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: productos,
+        datasets: [{
+            label: 'Cantidad vendida',
+          data: valores,
+          backgroundColor: "rgba(38, 166, 154,1)"
+        }]
+      },
+      options:
+        {responsive: false,
+            legend: {
+                display: false
+            },
+
+            scales: {
+                yAxes: [{
+                    ticks: {beginAtZero: true},
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Cantidad vendida'
+                    },
+                }],
+            },
+        }
+    });
+
+    var valores={{numFav|safe }}//label
+
+
+    //script del grafico
+    var ctx2 = document.getElementById('chartFavoritos').getContext('2d');
+    var myChart2 = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ["Favoritos"],
+        datasets: [{
+            label: 'Cantidad de Favoritos',
+          data: valores,
+          backgroundColor: "rgba(38, 166, 154,1)"
+        }]
+      },
+
+
+      options:
+        {responsive: false,
+            legend: {
+                display: false
+            },
+
+            scales: {
+                yAxes: [{
+                    ticks: {beginAtZero: true},
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Cantidad de Favoritos'
+                    },
+                }],
+                xAxes: [{
+                    barPercentage: 0.5,
+                }]
+            },
+        }
+    });
+
+    function editGraficos() {
+        var ini = $("#iniDate").val();
+        var fin = $("#finDate").val();
+        alert("No funciona aun el cambio dinamico");
+        /*
+            $.ajax({
+                    url: '/main/editGraf/',
+                    data: {
+                        'ini': ini,
+                        'fin': fin,
+                    },
+                    contentType: false,
+                    success: function(data) {
+                        var datachar = {
+                            labels: data.productosGraficar,
+                            datasets: [{
+                                label: 'Cantidad vendida',
+                                data: data.cantidadGraficar,
+                                backgroundColor: "rgba(38, 166, 154,1)"
+                            }]
+                        };
+                        var options = {responsive: false,
+                                    legend: {
+                                        display: false
+                                    },
+
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {beginAtZero: true},
+                                            scaleLabel: {
+                                                display: true,
+                                                labelString: 'Cantidad vendida'
+                                            },
+                                        }],
+                                    },
+                                };
+                        $("#chartVentasItem").remove();
+                        $("#ventasItemContainer").append('<canvas id="chartVentasItem" width=600 height=400></canvas>');
+                        //$("#chartFavoritos").remove();
+                        //$("#favoritosContainer").append('<canvas id="chartFavoritos" width=600 height=400></canvas>');
+                        myChart.destroy();
+                        var ctx = document.getElementById('chartVentasItem').getContext('2d');
+                        myChart = new Chart(ctx).Bar(datachar, options);
+
+                        //myChart.config.labels = data.productosGraficar;
+                        //myChart.config.data = data.cantidadGraficar;
+                        //myCHart.update();*/
+
+
+
+    }
+
+
+</script>
+
+</main>
+{% endblock %}
