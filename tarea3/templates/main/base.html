@@ -1,4 +1,5 @@
-{% load static %}<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -33,32 +34,36 @@
 
 
     <script>
+
         function act() {
-            var checkbox = document.getElementById('active');
+            var checkbox = document.getElementById('active')
+
             $.ajax({
-                    url: '/main/activeChange/',
-                    data: {
-                        'activo': checkbox.checked
-                    },
-                    dataType: 'json',
-                });
+                url: '/main/activeChange/',
+                data: {
+                    'activo': checkbox.checked,
+                },
+                dataType: 'json',
+            });
             if ($('#estado').length > 0) {
-                if (checkbox.checked){
+                if (checkbox.checked) {
                     $('#estado').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text light-green-text">Disponible</p>');
                 }
-                else{
+                else {
                     $('#estado').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text red-text">No Disponible</p>');
                 }
             }
             if ($('#estadochico').length > 0) {
-                if (checkbox.checked){
+                if (checkbox.checked) {
                     $('#estadochico').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text light-green-text">Disponible</p>');
                 }
-                else{
+                else {
                     $('#estadochico').html('<h4 class="card-title flow-text text-darken-4">Estado</h4><p class="medium-small flow-text red-text">No Disponible</p>');
                 }
             }
+
         }
+
 
     </script>
 

@@ -2,7 +2,7 @@ from django import forms
 from .models import *
 
 tiposUsuario = (
-    (None, 'Elige tipo de usuario'),
+    (0, 'Elige tipo de usuario'),
     (1, 'Fijo'),
     (2, 'Ambulante'),
     (3, 'Consumidor'),)

@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<script>
+    $(document).ready(function() {
+        $('select').material_select();
+        initMap();
+    });
+
+</script>
+<div class="section"></div>
+
+<main>
+
+    <div class="section"></div>
+
+    <div class="section"></div>
+
+    <div class="container">
+
+        <div class="z-depth-1 grey lighten-4 row" style="margin-left: 5%; margin-right: 5%; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+            <div id="map"></div>
+
+            <form class="col s12 m12" method="post" action="/main/registerPosFijo/">{% csrf_token %}
+                <div clas="row">
+                        <input name="lat" id="lat" value="" type="hidden">
+                         <input name="lng" id="lng" value=""  type="hidden">
+                        <input name="vid" id="vid" value="{{ vendedor.id }}" type="hidden">
+                </div>
+                <div class='row'>
+                    <button type='submit' name='btn_login' class='col s12 m4 l8 btn btn-large waves-effect teal'>Terminar de Registrarse</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="section"></div>
+    <div class="section"></div>
+</main>
+<script>
+        var marker = null;
+        function initMap() {
+            var beau850 = {lat: -33.457785, lng: -70.663808};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: beau850
+            });
+            map.addListener('click', function (e) {
+                placeMarker(e.latLng, map);
+            });
+        }
+        function placeMarker(latLng, map) {
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                    id: 'unique-marker'
+                });
+                $('#lat').val(latLng['lat']().toPrecision(7));
+                $('#lng').val(latLng['lng']().toPrecision(7));
+
+            }
+            else {
+                marker.setPosition(latLng);
+                $('#lat').val(latLng['lat']().toPrecision(7));
+                $('#lng').val(latLng['lng']().toPrecision(7));
+            }
+        }
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-vq0-a_07Tl4QVAcogDytLHvH9n0EC0k&callback=initMap">
+    </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+    <style>#map{ width:700px; height: 500px; }</style>
+{% endblock %}

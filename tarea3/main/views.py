@@ -21,10 +21,11 @@ formasDePagoLista = (
 
 def index(request):
     activo = False
-    user = request.user
+    user = request.userg
     if user.is_anonymous():
         vendedores = Vendedor.objects.all()
         return render_to_response('main/index.html', {'user': user, 'activo': activo, 'vendedores': vendedores})
+
     usuario = Usuario.objects.get(user_id=user.id)
     if usuario.tipo.id in [1, 2]:
         v = usuario.get_vendedor()
@@ -78,7 +79,7 @@ def registration(request):
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
             if form.cleaned_data['password'] != form.cleaned_data['password2']:
-                return render(request, 'main/singup.html', {'form': form})
+                return render(request, 'main/signup.html', {'form': form})
 
             tipoUsuario = form.cleaned_data['tipo']
             pagos = getPagos(request.POST)
@@ -87,7 +88,8 @@ def registration(request):
             if tipoUsuario == "2":
                 nuevoVendedorAmbulante(form.cleaned_data, pagos)
             if tipoUsuario == "1":
-                nuevoVendedorFijo(form.cleaned_data, pagos)
+                v = nuevoVendedorFijo(form.cleaned_data, pagos)
+                return render(request, 'main/registerFijo.html', {'form': form, 'vendedor': v})
             return HttpResponseRedirect('/main/login')
         else:
             form = SignUpForm()
@@ -95,6 +97,20 @@ def registration(request):
     else:
         form = SignUpForm()
         return render(request, 'main/signup.html', {'form': form})
+
+
+def registerPosFijo(request):
+    if request.method == 'POST':
+        print(request.POST.get('vid'))
+        print(request.POST.get('lat'))
+        v = Vendedor.objects.get(id=int(request.POST.get('vid')))
+        lat = float(request.POST.get('lat'))
+        lng = float(request.POST.get('lng'))
+        v.lat = lat
+        v.lng = lng
+        v.save()
+        return HttpResponseRedirect('/main/login')
+    return HttpResponseRedirect('/main/signup')
 
 
 @login_required
@@ -205,15 +221,15 @@ def vendedor_perfil(request, vendedor_id = 1):
     user = request.user
     usuario = user
     fav = False
-    if user.is_authenticated():
-        usuario = Usuario.objects.get(user=user)
-        c = usuario.get_consumidor()
-        fav = Favoritos.objects.filter(consumidor=c, vendedor=v).values()
     activo = False
     try:
         v = Vendedor.objects.get(id=vendedor_id)
     except:
         return redirect('/main/')
+    if user.is_authenticated():
+        usuario = Usuario.objects.get(user=user)
+        c = usuario.get_consumidor()
+        fav = Favoritos.objects.filter(consumidor=c, vendedor=v).values()
 
     try:
         p = Producto.objects.filter(vendedor_id=v.id)
@@ -233,6 +249,8 @@ def vendedor_perfil(request, vendedor_id = 1):
 
 def ajaxActive(request):
     act = request.GET.get('activo', None)
+    lat = request.GET.get('lat', None)
+    lng = request.GET.get('lng', None)
     user = request.user
     usuario = Usuario.objects.get(user=user)
     v = usuario.get_vendedor()
@@ -243,9 +261,13 @@ def ajaxActive(request):
     if act == 'false':
         acti = False
     m.activo = acti
+    m.lat = lat
+    m.lng = lng
+    v.lat = lat
+    v.lng = lng
+    v.save()
     m.save()
-    return
-
+    return JsonResponse({})
 
 
 def ajaxDownTransaction(request):

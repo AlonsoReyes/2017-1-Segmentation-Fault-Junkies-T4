@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^(?P<vendedor_id>\d+)/$', views.vendedor_perfil, name='vendedor_perfil'),
     url(r'^estadisticas/$', views.estadisticas, name='estadisticas'),
     url(r'^editGraf/$', views.ajaxEditGraf, name='ajaxEditGraf'),
+    url(r'^registerPosFijo/$', views.registerPosFijo, name='registerPosFijo')
 ]
 
 """"

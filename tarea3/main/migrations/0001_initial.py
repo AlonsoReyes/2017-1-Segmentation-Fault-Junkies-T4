@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import multiselectfield.db.fields
 import datetime
 from django.conf import settings
+import multiselectfield.db.fields
 
 
 class Migration(migrations.Migration):
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Avatars',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('imagen', models.ImageField(upload_to='avatars')),
             ],
             options={
@@ -27,8 +27,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Categorias',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
-                ('categoria', models.CharField(choices=[(1, 'Snacks'), (2, 'Almuerzos')], max_length=100)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('categoria', models.CharField(max_length=100, choices=[(1, 'Snacks'), (2, 'Almuerzos')])),
             ],
             options={
                 'db_table': 'categorias',
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Favoritos',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('fecha', models.DateField(default=datetime.datetime.today)),
             ],
             options={
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Producto',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('nombre', models.CharField(max_length=200)),
                 ('descripcion', models.CharField(max_length=400)),
                 ('stock', models.IntegerField(default=0)),
@@ -63,17 +63,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TipoUsuario',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
-                ('tipo', models.CharField(choices=[(1, 'Fijo'), (2, 'Ambulante'), (3, 'Consumidor'), (4, 'Admin')], max_length=100)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('tipo', models.CharField(max_length=100, choices=[(1, 'Fijo'), (2, 'Ambulante'), (3, 'Consumidor'), (4, 'Admin')])),
             ],
         ),
         migrations.CreateModel(
             name='Transacciones',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('fecha', models.DateField(default=datetime.datetime.today)),
-                ('lat', models.DecimalField(blank=True, max_digits=8, decimal_places=4, default=0)),
-                ('lng', models.DecimalField(blank=True, max_digits=8, decimal_places=4, default=0)),
+                ('lat', models.DecimalField(blank=True, decimal_places=4, default=0, max_digits=8)),
+                ('lng', models.DecimalField(blank=True, decimal_places=4, default=0, max_digits=8)),
                 ('producto', models.ForeignKey(to='main.Producto')),
             ],
             options={
@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Usuario',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('nombre', models.CharField(max_length=100)),
                 ('email', models.EmailField(max_length=100)),
                 ('avatar', models.ImageField(upload_to='avatars')),
@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Admin',
             fields=[
-                ('usuario_ptr', models.OneToOneField(parent_link=True, to='main.Usuario', serialize=False, primary_key=True, auto_created=True)),
+                ('usuario_ptr', models.OneToOneField(auto_created=True, to='main.Usuario', primary_key=True, serialize=False, parent_link=True)),
             ],
             options={
                 'db_table': 'admin',
@@ -105,8 +105,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Consumidor',
             fields=[
-                ('usuario_ptr', models.OneToOneField(parent_link=True, to='main.Usuario', serialize=False, primary_key=True, auto_created=True)),
-                ('vendedoresFavoritos', multiselectfield.db.fields.MultiSelectField(max_length=200, blank=True, null=True)),
+                ('usuario_ptr', models.OneToOneField(auto_created=True, to='main.Usuario', primary_key=True, serialize=False, parent_link=True)),
+                ('vendedoresFavoritos', multiselectfield.db.fields.MultiSelectField(blank=True, max_length=200, null=True)),
             ],
             options={
                 'db_table': 'consumidor',
@@ -116,11 +116,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Vendedor',
             fields=[
-                ('usuario_ptr', models.OneToOneField(parent_link=True, to='main.Usuario', serialize=False, primary_key=True, auto_created=True)),
-                ('formas_de_pago', multiselectfield.db.fields.MultiSelectField(choices=[(1, 'Efectivo'), (2, 'Tarjeta de Débito'), (3, 'Tarjeta de Crédito'), (4, 'Tarjeta Junaeb')], max_length=7, blank=True, null=True)),
+                ('usuario_ptr', models.OneToOneField(auto_created=True, to='main.Usuario', primary_key=True, serialize=False, parent_link=True)),
+                ('formas_de_pago', multiselectfield.db.fields.MultiSelectField(blank=True, max_length=7, null=True, choices=[(1, 'Efectivo'), (2, 'Tarjeta de Débito'), (3, 'Tarjeta de Crédito'), (4, 'Tarjeta Junaeb')])),
                 ('numfavoritos', models.IntegerField(default=0)),
-                ('lat', models.DecimalField(max_digits=8, decimal_places=4, default=0)),
-                ('lng', models.DecimalField(max_digits=8, decimal_places=4, default=0)),
+                ('lat', models.DecimalField(decimal_places=4, default=0, max_digits=8)),
+                ('lng', models.DecimalField(decimal_places=4, default=0, max_digits=8)),
             ],
             options={
                 'db_table': 'vendedor',
@@ -140,7 +140,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VendedorAmbulante',
             fields=[
-                ('vendedor_ptr', models.OneToOneField(parent_link=True, to='main.Vendedor', serialize=False, primary_key=True, auto_created=True)),
+                ('vendedor_ptr', models.OneToOneField(auto_created=True, to='main.Vendedor', primary_key=True, serialize=False, parent_link=True)),
                 ('activo', models.BooleanField(default=False)),
             ],
             options={
@@ -151,7 +151,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VendedorFijo',
             fields=[
-                ('vendedor_ptr', models.OneToOneField(parent_link=True, to='main.Vendedor', serialize=False, primary_key=True, auto_created=True)),
+                ('vendedor_ptr', models.OneToOneField(auto_created=True, to='main.Vendedor', primary_key=True, serialize=False, parent_link=True)),
                 ('horaIni', models.TimeField(blank=True)),
                 ('horaFin', models.TimeField(blank=True)),
             ],

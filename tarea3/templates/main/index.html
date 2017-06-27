@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% block content %}
+<<<<<<< HEAD
     <div id="map"></div>
 
     <script>
@@ -125,6 +126,7 @@
             } else {
                 // Browser doesn't support Geolocation
                 handleLocationError(false, infoWindow, map.getCenter());
+
             }
         }
 
@@ -136,7 +138,11 @@
             infoWindow.open(map);
         }
     </script>
+    <script>
+
+    </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-vq0-a_07Tl4QVAcogDytLHvH9n0EC0k&callback=initMap">
     </script>
+</main>
 {% endblock %}

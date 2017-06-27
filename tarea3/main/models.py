@@ -146,6 +146,18 @@ class Vendedor(Usuario):
     def junaeb(self):
         return "4" in self.formas_de_pago
 
+    def formasDePago_toStr(self):
+        res = ""
+        if self.efectivo():
+            res+="Efectivo "
+        if self.debito():
+            res+="Débito "
+        if self.credito():
+            res+="Crédito "
+        if self.junaeb():
+            res+="Junaeb"
+        return res
+
 
     class Meta:
         db_table = 'vendedor'
