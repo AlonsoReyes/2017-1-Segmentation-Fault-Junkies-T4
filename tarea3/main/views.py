@@ -21,7 +21,7 @@ formasDePagoLista = (
 
 def index(request):
     activo = False
-    user = request.userg
+    user = request.user
     if user.is_anonymous():
         vendedores = Vendedor.objects.all()
         return render_to_response('main/index.html', {'user': user, 'activo': activo, 'vendedores': vendedores})
