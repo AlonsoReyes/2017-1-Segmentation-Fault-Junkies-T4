@@ -11,6 +11,7 @@ from django.utils.timezone import datetime, timedelta
 from django.db.models import Count, Sum
 import json as simplejson
 
+
 formasDePagoLista = (
         (1, 'Efectivo'),
         (2, 'Tarjeta de Crédito'),
@@ -21,10 +22,16 @@ formasDePagoLista = (
 
 def index(request):
     activo = False
-    user = request.userg
+    user = request.user
     if user.is_anonymous():
         vendedores = Vendedor.objects.all()
-        return render_to_response('main/index.html', {'user': user, 'activo': activo, 'vendedores': vendedores})
+        vend = []
+        for v in vendedores:
+            p = Producto.objects.filter(vendedor=v).values().annotate(conteo=Count('nombre'))
+            for prod in list(p):
+                if prod['conteo'] != 0:
+                    vend.append(v)
+        return render_to_response('main/index.html', {'user': user, 'activo': activo, 'vendedores': vend})
 
     usuario = Usuario.objects.get(user_id=user.id)
     if usuario.tipo.id in [1, 2]:
@@ -40,7 +47,14 @@ def index(request):
             return render_to_response('main/vendedor_perfil.html', {'userB': user, 'user': usuario, 'vendedor': v, 'activo': usuario.get_vendedor().is_active_now(), 'productos' : p})
     else:
         vendedores = Vendedor.objects.all()
-        return render_to_response('main/index.html', {'userB': user, 'user': usuario, 'activo': activo, 'vendedores': vendedores})
+        vend = []
+        for v in vendedores:
+            p = Producto.objects.filter(vendedor=v).values().annotate(conteo=Count('nombre'))
+            for prod in list(p):
+                if prod['conteo'] != 0:
+                    vend.append(v)
+
+        return render_to_response('main/index.html', {'userB': user, 'user': usuario, 'activo': activo, 'vendedores': vend})
 
 
 def signup(request):
@@ -311,6 +325,7 @@ def ajaxFavChange(request):
         consumidor.vendedoresFavoritos.remove(str(v_id))
         vendedor.numfavoritos -= 1
         vendedor.save()
+    return JsonResponse({'nFav': vendedor.numfavoritos})
 
 
 def estadisticas(request):

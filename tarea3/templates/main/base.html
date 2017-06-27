@@ -32,16 +32,29 @@
     <script src="http://materializecss.com/templates/starter-template/js/init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
 
-
     <script>
+        var lat = 0;
+        var lng = 0;
+        function setPos(position) {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+        }
+
 
         function act() {
             var checkbox = document.getElementById('active')
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(setPos);
+            } else {
+                alert("Debe prender el GPS");
+            }
 
             $.ajax({
                 url: '/main/activeChange/',
                 data: {
                     'activo': checkbox.checked,
+                    'lat': lat,
+                    'lng': lng,
                 },
                 dataType: 'json',
             });
@@ -81,11 +94,11 @@
             <ul id="slide-out" class="side-nav fixed leftside-navigation ps-container ps-active-y">
                 <li>
                     <div class="userView">
-
+                    {% if userB.is_authenticated %}
                         <a href="{% url 'edit' %}">
                             <i class="material-icons right grey-text text-lighten-2" style="position: absolute; bottom: -0.5em; right: 0.5em; padding: 0 0 !important;">settings</i>
                         </a>
-
+                    {% endif %}
                   <div class="background" style="height:175px;">
                     <img src="/static/img/background4.png">
                   </div>
@@ -144,7 +157,7 @@
                 <li>
                     <div class="switch" style="margin-left: 10px;">
                         <label>
-                            <input type="checkbox"><span class="lever"></span>main
+                            <input type="checkbox"><span class="lever"></span>Almuerzos
                         </label>
                     </div>
                 </li>

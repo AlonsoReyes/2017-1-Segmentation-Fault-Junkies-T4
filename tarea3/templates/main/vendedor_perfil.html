@@ -46,6 +46,9 @@
                         'v_id': vid,
                     },
                     dataType: 'json',
+                    success: function (data) {
+                            $("#numeroFav").html(data.nFav);
+                        },
                 });
         }
 
@@ -117,7 +120,7 @@
                                     {% endif %}
                               {% endif %}
 
-                                    <span class=" grey-text flow-text text-darken-4"style="font-size:24px; line-height:35px;">{{vendedor.numfavoritos}}</span>
+                                    <span id="numeroFav" class=" grey-text flow-text text-darken-4"style="font-size:24px; line-height:35px;">{{vendedor.numfavoritos}}</span>
 
                                 </h6>
                             </label>
