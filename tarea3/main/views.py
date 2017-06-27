@@ -23,7 +23,8 @@ def index(request):
     activo = False
     user = request.user
     if user.is_anonymous():
-        return render_to_response('main/index.html', {'user': user, 'activo': activo})
+        vendedores = Vendedor.objects.all()
+        return render_to_response('main/index.html', {'user': user, 'activo': activo, 'vendedores': vendedores})
     usuario = Usuario.objects.get(user_id=user.id)
     if usuario.tipo.id in [1, 2]:
         v = usuario.get_vendedor()
@@ -37,7 +38,8 @@ def index(request):
         if usuario.tipo.id == 1:
             return render_to_response('main/vendedor_perfil.html', {'userB': user, 'user': usuario, 'vendedor': v, 'activo': usuario.get_vendedor().is_active_now(), 'productos' : p})
     else:
-        return render_to_response('main/index.html', {'userB': user, 'user': usuario, 'activo': activo})
+        vendedores = Vendedor.objects.all()
+        return render_to_response('main/index.html', {'userB': user, 'user': usuario, 'activo': activo, 'vendedores': vendedores})
 
 
 def signup(request):
