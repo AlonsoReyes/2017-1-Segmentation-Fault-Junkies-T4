@@ -13,7 +13,7 @@
             });
             infoWindow = new google.maps.InfoWindow;
 
-            var info = '<div id="content">'+
+            /*var info = '<div id="content">'+
                 '<div id="siteNotice">'+
                 '</div>'+
                 '<div><p style="float: left;"><img src="/static/img/AvatarVendedor4.png" width="50" hspace="10"></p>'    +
@@ -36,31 +36,13 @@
             });
 
 
-            /*var marker = new google.maps.Marker({
-                position: beau850,
-                map: map
-            });
-
-            var marker2 = new google.maps.Marker({
-                position: {lat: -33.457885, lng: -70.663808},
-                map: map
-            });*/
-
             var marker = new google.maps.Marker({
                 position: {lat: -33.458085, lng: -70.663808},
                 map: map,
                 icon: '/static/img/star.png'
-            });
-
-            /*var marker4 = new google.maps.Marker({
-                position: {lat: -33.458158, lng: -70.663678},
-                map: map
-            });
-
-            var marker5 = new google.maps.Marker({
-                position: {lat: -33.457658, lng: -70.663778},
-                map: map
             });*/
+            var markers = []
+
 
             {% if vendedores %}
                 {% for vendedor in vendedores %}
@@ -90,9 +72,11 @@
                         {% if vendedor.debito %}
                         + 'Debito'
                         {% endif %}
-                        + '</p>' +
-                        '<p><i>Horario:</i> {{ vendedor.horas }}</p>' +
-                        '<p style="text-align: right;"><a href={{ vendedor.id }}>Ver detalles»</a></p>' +
+                        + '</p>'
+                        {% if vendedor.is_fijo %}
+                        +'<p><i>Horario:</i> {{ vendedor.horas }}</p>'
+                         {% endif %}
+                        +'<p style="text-align: right;"><a href={{ vendedor.id }}>Ver detalles»</a></p>' +
                         '</div>'+
                         '</div>';
 
@@ -103,6 +87,7 @@
 
                     marker{{ forloop.counter }}.addListener('click', function() {
                 infowindows{{ forloop.counter }}.open(map, marker{{ forloop.counter }});
+                markers.push(marker{{ forloop.counter }});
             });
 
 
