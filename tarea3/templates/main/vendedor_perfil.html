@@ -109,14 +109,15 @@
                                 <h4 class="card-title grey-text flow-text text-darken-4">Favorito</h4>
                                 <!--<input type="checkbox"><span class="lever"></span>-->
                                     <h6><p><i class="material-icons amber-text center-align">grade</i></p>
+                                {% if userB.is_authenticated %}
                                     {% if user.is_consumidor %}
                                         <input type="checkbox" name = "favLever" id = "favLever" onchange="fav({{ vendedor.id }}, {{ user.get_consumidor.id }})"
                                                 {% if favorito %} checked="checked" {% endif %}><span class="lever"></span>
                                     {% endif %}
+                              {% endif %}
 
-                                {% if user.is_vendedor %}
                                     <span class=" grey-text flow-text text-darken-4"style="font-size:24px; line-height:35px;">{{vendedor.numfavoritos}}</span>
-                                {% endif %}
+
                                 </h6>
                             </label>
                         </div>
@@ -147,7 +148,7 @@
                             </label>
                         </div>
                     </div>
-                <div class="col s3 m2 l12 offset-s1" {% if userB.id == user.user.id %}id="estadochico"{% endif %}>
+                <div class="col s3 m2 l12 offset-s1" {% if userB.id == vendedor.user.id %}id="estadochico"{% endif %}>
                     <p class=" flow-text text-darken-4">Estado</p>
                     {% if activo %}
                             <p class="medium-small flow-text light-green-text">Disponible</p>
@@ -155,6 +156,7 @@
                             <p class="medium-small flow-text red-text">No Disponible</p>
                         {% endif %}
                 </div>
+
 
                 <div class="col s3 m2 l12 offset-s1"> <!--offset-s2-->
                     <p class=" grey-text flow-text text-darken-4" style="font-size: 1.3rem;">Formas de pago</p>

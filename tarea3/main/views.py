@@ -203,8 +203,12 @@ def elim_prod(request):
 
 def vendedor_perfil(request, vendedor_id = 1):
     user = request.user
-    usuario = Usuario.objects.get(user=user)
-    c = usuario.get_consumidor()
+    usuario = user
+    fav = False
+    if user.is_authenticated():
+        usuario = Usuario.objects.get(user=user)
+        c = usuario.get_consumidor()
+        fav = Favoritos.objects.filter(consumidor=c, vendedor=v).values()
     activo = False
     try:
         v = Vendedor.objects.get(id=vendedor_id)
@@ -217,7 +221,7 @@ def vendedor_perfil(request, vendedor_id = 1):
         p = []
 
     activo = v.is_active_now()
-    fav = Favoritos.objects.filter(consumidor=c, vendedor=v).values()
+
     if not fav:
         favorito = False
     else:
